@@ -1,0 +1,13 @@
+# Use the SDK image to build and run tests
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+COPY ["../ProductAPI.Application/ProductAPI.Application.csproj", "ProductAPI.Application/"]
+COPY ["../ProductAPI.Domain/ProductAPI.Domain.csproj", "ProductAPI.Domain/"]
+COPY ["../ProductAPI.Infra/ProductAPI.Infra.csproj", "ProductAPI.Infra/"]
+COPY ["../ProductAPI.Services/ProductAPI.Services.csproj", "ProductAPI.Services/"]
+COPY ["../ProductAPI.Tests/ProductAPI.Tests.csproj", "ProductAPI.Tests/"]
+RUN dotnet restore "ProductAPI.Tests/ProductAPI.Tests.csproj"
+COPY ../ .
+WORKDIR "/src/ProductAPI.Tests"
+RUN dotnet build "ProductAPI.Tests.csproj" -c Release -o /app/build
+ENTRYPOINT ["dotnet", "test", "--logger:trx"]

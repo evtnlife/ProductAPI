@@ -1,0 +1,4 @@
+# Ignore bin and obj folders in all directories
+**/bin/
+**/obj/
+/docker-compose/.containers/productapi-db

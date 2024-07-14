@@ -1,0 +1,31 @@
+services: 
+  productapi.tests:
+    build:
+      context: ../
+      dockerfile: ProductAPI.Application/Dockerfile.tests
+    depends_on:
+      - productapi.application
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Testing
+  productapi.application:
+    image: image_product_api
+    container_name: productapi.application
+    build:
+      context: ../
+      dockerfile: ProductAPI.Application/Dockerfile
+    ports:
+      - "8080:80" 
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=productapi.database;Database=productapi;Username=postgres;Password=postgres
+  productapi.database:
+    image: postgres:latest
+    container_name: productapi.database
+    environment: 
+      - POSTGRES_DB=productapi
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./.containers/productapi-db:/var/lib/postgresql/data
+    ports: 
+      - "5000:5432"
+ 
